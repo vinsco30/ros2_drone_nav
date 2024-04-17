@@ -19,6 +19,7 @@ RUN sudo apt install ros-humble-mavros-extras -y
 RUN sudo apt install ros-humble-octomap-rviz-plugins -y
 RUN sudo apt install ros-humble-fastcdr -y
 RUN sudo apt install ros-dev-tools -y
+RUN sudo apt install ros-humble-ros-gz-bridge -y
 
 #Environment variables
 ENV DEBIAN_FRONTEND=noninteractive
@@ -72,13 +73,6 @@ RUN echo "user" | sudo -S sudo ldconfig /usr/local/lib/
 
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash; rosdep update; rosdep install -i --from-path src --rosdistro humble -y; colcon build --symlink-install
 WORKDIR ${HOME}/ros2_ws/src
-
-# RUN git clone https://github.com/PX4/px4_ros_com.git
-# WORKDIR ${HOME}/ros2_ws
-# RUN source /opt/ros/${ROS_DISTRO}/setup.bash; source install/setup.bash; colcon build 
-
-# RUN echo "user" | sudo -S chmod +x src/leonardo_drone/install_geographiclib_dataset.sh
-# RUN echo "user" | sudo -S ./src/leonardo_drone/install_geographiclib_dataset.sh
 
 #Add script source to .bashrc
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash;" >>  ${HOME}/.bashrc
