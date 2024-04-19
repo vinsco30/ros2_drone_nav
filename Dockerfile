@@ -68,22 +68,18 @@ COPY --chown=user ./src ${HOME}/ros2_ws/src
 SHELL ["/bin/bash", "-c"] 
 WORKDIR ${HOME}/ros2_ws/src
 RUN git clone https://github.com/PX4/px4_msgs.git
-RUN git clone https://github.com/PX4/px4_ros_com.git
-# RUN git clone https://github.com/gazebosim/ros_gz.git -b humble
+# RUN git clone https://github.com/PX4/px4_ros_com.git
 
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash; rosdep update; rosdep install -i --from-path src --rosdistro humble -y; colcon build --symlink-install
 
 RUN echo "user" | sudo -S sh -c 'echo "deb [arch=$(dpkg --print-architecture)] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/ros2-latest.list'
-RUN echo "user" | sudo -S curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+RUN echo "user" | sudo -S curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo -S apt-key add -
 RUN echo "user" | sudo -S apt-get update
 RUN echo "user" | sudo -S sudo apt install ros-humble-ros-gz -y
 
-#Add the gz bridge for sensors topics
-# WORKDIR ${HOME}/ros2_ws/src
-# RUN git clone https://github.com/gazebosim/ros_gz.git -b humble
-# WORKDIR ${HOME}/ros2_ws
-# RUN echo "user" | sudo -S rosdep install -r --from-paths src -i -y --rosdistro humble
-# RUN colcon build
+RUN git clone https://github.com/PX4/px4_ros_com.git
+WORKDIR ${HOME}/ros2_ws
+RUN source /opt/ros/${ROS_DISTRO}/setup.bash; source install/setup.bash; colcon build 
 
 #Add script source to .bashrc
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash;" >>  ${HOME}/.bashrc
